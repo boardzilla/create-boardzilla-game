@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "description": "Create a boardzilla game template",
   "bin": {
-    "create-game": "npm run index.js"
+    "create-game": "node run index.js"
   },
   "contributors": [
     "Andrew Hull <aghull@gmail.com>",
