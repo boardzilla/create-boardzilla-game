@@ -4,14 +4,15 @@
   "description": "Your game description here",
   "scripts": {
     "dev": "bz run -root .",
-    "build:ui": "npx node esbuild-ui.mjs",
-    "build:game": "npx node esbuild-game.mjs",
+    "build:ui": "node esbuild-ui.mjs",
+    "build:game": "node esbuild-game.mjs",
     "publish": "bz release"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "esbuild": "latest",
+    "esbuild-sass-plugin": "latest",
     "@boardzilla/core": "latest",
     "@boardzilla/devtools": "latest"
   }
