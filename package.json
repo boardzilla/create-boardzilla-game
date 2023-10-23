@@ -2,7 +2,7 @@
   "name": "@boardzilla/create-game",
   "version": "0.0.5",
   "description": "Create a boardzilla game template",
-  "bin": "node run index.js",
+  "bin": "./index.js",
   "contributors": [
     "Andrew Hull <aghull@gmail.com>",
     "Joshua Hull <josh@fireflop.com>"
