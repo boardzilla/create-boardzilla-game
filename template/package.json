@@ -1,0 +1,15 @@
+{
+  "name": "game-name",
+  "version": "1.0.0",
+  "description": "Your game description here",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "latest",
+    "boardzilla-core": "latest",
+    "boardzilla-devtools": "latest"
+  }
+}

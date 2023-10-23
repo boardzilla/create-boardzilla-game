@@ -1,0 +1,26 @@
+{
+  "name": "game-name",
+  "friendlyName": "game-name",
+  "description": "Your game description",
+  "minPlayers": 1,
+  "maxPlayers": 4,
+  "image": "guess.jpg",
+  "ui": {
+    "root": ".",
+    "build": {
+      "dev": "npm run build:ui",
+      "prod": "npm run build:ui"
+    },
+    "watchPaths": ["ui/src"],
+    "outDir": "ui/build"
+  },
+  "game": {
+    "root": ".",
+    "build": {
+      "dev": "npm run build:game",
+      "prod": "npm run build:game"
+    },
+    "watchPaths": ["game/src"],
+    "out": "game/build/index.js"
+  }
+}
