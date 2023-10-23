@@ -11,7 +11,7 @@
       "dev": "npm run build:ui",
       "prod": "npm run build:ui"
     },
-    "watchPaths": ["ui/src"],
+    "watchPaths": ["src/ui"],
     "outDir": "ui/build"
   },
   "game": {
@@ -20,7 +20,7 @@
       "dev": "npm run build:game",
       "prod": "npm run build:game"
     },
-    "watchPaths": ["game/src"],
+    "watchPaths": ["src/game"],
     "out": "game/build/index.js"
   }
 }

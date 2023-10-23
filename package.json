@@ -1,5 +1,5 @@
 {
-  "name": "create-boardzilla-game",
+  "name": "@boardzilla/create-game",
   "version": "0.0.1",
   "description": "Create a boardzilla game template",
   "bin": {

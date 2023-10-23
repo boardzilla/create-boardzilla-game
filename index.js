@@ -9,6 +9,10 @@ const package = require('./package.json')
 const program = new Command();
 const spawn = require('child_process').spawnSync;
 
+function toTitleCase(str) {
+  return str.split(/\W+/).map(s => s.charAt(0).toUpperCase() + s.substr(1).toLowerCase()).join(" ")
+}
+
 program
   .name('create-boardzilla-game')
   .description('CLI to create a boardzilla game')
@@ -17,7 +21,7 @@ program
 program.description('The name of the game to create')
   .argument('<name>', 'Name of game to create');
 
-console.log(program.parse(process.argv));
+program.parse(process.argv)
 
 const projectName = program.args[0]
 
@@ -50,6 +54,13 @@ projectPackageJson.name = projectName;
 fs.writeFileSync(
   path.join(projectDir, 'package.json'),
   JSON.stringify(projectPackageJson, null, 2)
+);
+const gameManifest = require(path.join(projectDir, 'game.v1.json'));
+gameManifest.name = projectName;
+gameManifest.friendlyName = toTitleCase(projectName);
+fs.writeFileSync(
+  path.join(projectDir, 'game.v1.json'),
+  JSON.stringify(gameManifest, null, 2)
 );
 
 // Run `npm install` in the project directory to install
