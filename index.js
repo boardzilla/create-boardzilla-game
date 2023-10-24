@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { Command } = require('commander');
+const { Command, InvalidArgumentError } = require('commander');
 const package = require('./package.json')
 const program = new Command();
 const spawn = require('child_process').spawnSync;
@@ -13,13 +13,20 @@ function toTitleCase(str) {
   return str.split(/\W+/).map(s => s.charAt(0).toUpperCase() + s.substr(1).toLowerCase()).join(" ")
 }
 
+function validateName(name) {
+  if (!name.match(/^[a-z0-9_-]+$/)) {
+    throw new InvalidArgumentError('Can only contain lowercase letters, digits, _ and -');
+  }
+  return name
+}
+
 program
   .name('create-boardzilla-game')
   .description('CLI to create a boardzilla game')
   .version(package.version);
 
 program.description('The name of the game to create')
-  .argument('<name>', 'Name of game to create');
+  .argument('<name>', 'Name of game to create', validateName);
 
 program.parse(process.argv)
 
