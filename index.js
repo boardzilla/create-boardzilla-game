@@ -4,14 +4,15 @@
 
 const fs = require('fs');
 const path = require('path');
-const { Command, InvalidArgumentError, Option } = require('commander');
-const package = require('./package.json')
-const program = new Command();
-const spawn = require('child_process').spawnSync;
-const needle = require('needle');
-const AdmZip = require('adm-zip');
 const os = require('os');
 const crypto = require('crypto');
+
+const { Command, InvalidArgumentError, Option } = require('commander');
+const spawn = require('child_process').spawnSync;
+const AdmZip = require('adm-zip');
+
+const package = require('./package.json')
+const program = new Command();
 
 function toTitleCase(str) {
   return str.split(/\W+/).map(s => s.charAt(0).toUpperCase() + s.substr(1).toLowerCase()).join(" ")
