@@ -9,7 +9,7 @@
   ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "commander": "^11.1.0",
-    "cross-spawn": "^7.0.3"
+    "adm-zip": "^0.5.10",
+    "commander": "^11.1.0"
   }
 }

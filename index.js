@@ -4,10 +4,14 @@
 
 const fs = require('fs');
 const path = require('path');
-const { Command, InvalidArgumentError } = require('commander');
+const { Command, InvalidArgumentError, Option } = require('commander');
 const package = require('./package.json')
 const program = new Command();
 const spawn = require('child_process').spawnSync;
+const needle = require('needle');
+const AdmZip = require('adm-zip');
+const os = require('os');
+const crypto = require('crypto');
 
 function toTitleCase(str) {
   return str.split(/\W+/).map(s => s.charAt(0).toUpperCase() + s.substr(1).toLowerCase()).join(" ")
@@ -20,38 +24,58 @@ function validateName(name) {
   return name
 }
 
+function validateTemplateName(name) {
+  const options = new Map(
+    [["empty", "boardzilla-starter-game"]]
+  )
+  const repoName = options.get(name)
+  if (!repoName) {
+    throw new InvalidArgumentError('Must be one of ' + Array.from(options.keys()).join(", "));
+  }
+  return repoName
+}
+
 program
   .name('create-boardzilla-game')
   .description('CLI to create a boardzilla game')
   .version(package.version);
 
 program.description('The name of the game to create')
-  .argument('<name>', 'Name of game to create', validateName);
+  .argument('<name>', 'name of game to create', validateName)
+  .addOption(new Option('-t, --template <name>', validateTemplateName, 'name of template to use').preset("empty").argParser(validateTemplateName));
 
 program.parse(process.argv)
 
+console.log()
 const projectName = program.args[0]
+const templateName = program.opts()["template"] || "boardzilla-starter-game"
 
 // Create a project directory with the project name.
 const currentDir = process.cwd();
 const projectDir = path.resolve(currentDir, projectName);
+
+if (fs.existsSync(projectDir)) {
+  console.error(`${projectDir} already exists`)
+  process.exit(1)
+}
+
 fs.mkdirSync(projectDir, { recursive: true });
+const gameOut = path.join(os.tmpdir(), `game-${crypto.randomBytes(4).readUInt32LE(0)}.zip`)
+const gameZipOut = path.join(os.tmpdir(), `game-${crypto.randomBytes(4).readUInt32LE(0)}`)
 
-// A common approach to building a starter template is to
-// create a `template` folder which will house the template
-// and the files we want to create.
-const templateDir = path.resolve(__dirname, 'template');
-fs.cpSync(templateDir, projectDir, { recursive: true });
+function cleanup() {
+  fs.rmSync(gameOut, {force: true})
+  fs.rmdirSync(gameZipOut, {force: true, recursive: true})
+}
+process.on('exit', cleanup);
+process.on('SIGINT', cleanup);
+process.on('uncaughtException', cleanup);
 
-// It is good practice to have dotfiles stored in the
-// template without the dot (so they do not get picked
-// up by the starter template repository). We can rename
-// the dotfiles after we have copied them over to the
-// new project directory.
-fs.renameSync(
-  path.join(projectDir, 'gitignore'),
-  path.join(projectDir, '.gitignore')
-);
+spawn("curl", ["-L", `https://github.com/boardzilla/${templateName}/zipball/master/`, "-o", gameOut])
+const zip = new AdmZip(gameOut)
+zip.extractAllTo(gameZipOut)
+const entries = fs.readdirSync(gameZipOut)
+fs.cpSync(path.join(gameZipOut, entries[0]), projectDir, { recursive: true });
 
 const projectPackageJson = require(path.join(projectDir, 'package.json'));
 
