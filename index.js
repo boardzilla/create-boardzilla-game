@@ -36,6 +36,13 @@ function validateTemplateName(name) {
   return repoName
 }
 
+function validateInstaller(bin) {
+  if (['npm','pnpm', 'yarn'].indexOf(bin) === -1) {
+    throw new InvalidArgumentError('Must be either npm, pnpm or yarn.');
+  }
+  return bin
+}
+
 program
   .name('create-boardzilla-game')
   .description('CLI to create a boardzilla game')
@@ -43,20 +50,15 @@ program
 
 program.description('The name of the game to create')
   .argument('<name>', 'name of game to create', validateName)
-  .addOption(new Option('-t, --template <name>', 'name of template to use').preset("empty").argParser(validateTemplateName));
+  .addOption(new Option('-t, --template <name>', 'name of template to use').preset("empty").argParser(validateTemplateName))
+  .addOption(new Option('-i, --install-with <bin>', 'name of package installer to use').preset("npm").argParser(validateInstaller))
 
 program.parse(process.argv)
 
 const projectName = program.args[0]
 const opts = program.opts()
 const templateName = opts["template"] || "boardzilla-starter-game"
-let installer = 'npm';
-if (process.env.npm_config_user_agent) {
-  const match = process.env.npm_config_user_agent.match("^[^\/]+");
-  if (match) {
-    installer = match[0];
-  }
-}
+const installer = opts['installWith']
 
 // Create a project directory with the project name.
 const currentDir = process.cwd();
