@@ -36,6 +36,13 @@ function validateTemplateName(name) {
   return repoName
 }
 
+function validateInstaller(bin) {
+  if (['npm','pnpm', 'yarn'].indexOf(bin) === -1) {
+    throw new InvalidArgumentError('Must be either npm, pnpm or yarn.');
+  }
+  return bin
+}
+
 program
   .name('create-boardzilla-game')
   .description('CLI to create a boardzilla game')
@@ -43,15 +50,15 @@ program
 
 program.description('The name of the game to create')
   .argument('<name>', 'name of game to create', validateName)
-  .addOption(new Option('-t, --template <name>', validateTemplateName, 'name of template to use').preset("empty").argParser(validateTemplateName))
-  .option('--use-yarn')
+  .addOption(new Option('-t, --template <name>', 'name of template to use').preset("empty").argParser(validateTemplateName))
+  .addOption(new Option('-i, --install-with <bin>', 'name of package installer to use').preset("npm").argParser(validateInstaller))
 
 program.parse(process.argv)
 
 const projectName = program.args[0]
 const opts = program.opts()
 const templateName = opts["template"] || "boardzilla-starter-game"
-const useYarn = opts['useYarn'] || false
+const installer = opts['installWith']
 
 // Create a project directory with the project name.
 const currentDir = process.cwd();
@@ -101,7 +108,7 @@ fs.writeFileSync(
 // the dependencies. We are using a third-party library
 // called `cross-spawn` for cross-platform support.
 // (Node has issues spawning child processes in Windows).
-spawn(useYarn ? 'yarn' : 'npm', ['install'], { stdio: 'inherit', cwd: projectDir });
+spawn(installer, ['install'], { stdio: 'inherit', cwd: projectDir });
 
 console.log('Success! Your new project is ready.');
 console.log(`Created ${projectName} at ${projectDir}`);
