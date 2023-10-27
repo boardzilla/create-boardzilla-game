@@ -43,13 +43,15 @@ program
 
 program.description('The name of the game to create')
   .argument('<name>', 'name of game to create', validateName)
-  .addOption(new Option('-t, --template <name>', validateTemplateName, 'name of template to use').preset("empty").argParser(validateTemplateName));
+  .addOption(new Option('-t, --template <name>', validateTemplateName, 'name of template to use').preset("empty").argParser(validateTemplateName))
+  .option('--use-yarn')
 
 program.parse(process.argv)
 
-console.log()
 const projectName = program.args[0]
-const templateName = program.opts()["template"] || "boardzilla-starter-game"
+const opts = program.opts()
+const templateName = opts["template"] || "boardzilla-starter-game"
+const useYarn = opts['useYarn'] || false
 
 // Create a project directory with the project name.
 const currentDir = process.cwd();
@@ -99,7 +101,7 @@ fs.writeFileSync(
 // the dependencies. We are using a third-party library
 // called `cross-spawn` for cross-platform support.
 // (Node has issues spawning child processes in Windows).
-spawn('npm', ['install'], { stdio: 'inherit', cwd: projectDir });
+spawn(useYarn ? 'yarn' : 'npm', ['install'], { stdio: 'inherit', cwd: projectDir });
 
 console.log('Success! Your new project is ready.');
 console.log(`Created ${projectName} at ${projectDir}`);
