@@ -161,10 +161,6 @@ function validateClassName(name) {
     fs.writeFileSync(item, contents.replace(new RegExp(`MyGame(Board|Player)`, 'g'), `${className}$1`));
   })
 
-  // Run `npm install` in the project directory to install
-  // the dependencies. We are using a third-party library
-  // called `cross-spawn` for cross-platform support.
-  // (Node has issues spawning child processes in Windows).
   if (installer !== "") {
     spawn(installer, ['install'], { stdio: 'inherit', cwd: projectDir });
   }
