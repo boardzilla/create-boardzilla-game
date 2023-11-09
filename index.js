@@ -36,26 +36,6 @@ function validateClassName(name) {
   return true
 }
 
-// program
-//   .name('create-boardzilla-game')
-//   .description('CLI to create a boardzilla game')
-//   .version(package.version);
-
-// program.description('The name of the game to create')
-//   .argument('<name>', 'name of game to create', validateName)
-//   .addOption(new Option('-t, --template <name>', 'name of template to use').preset("empty").argParser(validateTemplateName))
-//   .addOption(new Option('-i, --install-with <bin>', 'name of package installer to use').preset("npm").argParser(validateInstaller))
-//   .addOption(new Option('-c, --classname <name>', 'name of package installer to use').preset("npm").argParser(validateInstaller))
-
-// program.parse(process.argv)
-
-// const projectName = program.args[0]
-// const opts = program.opts()
-// const templateName = opts["template"] || "boardzilla-starter-game"
-// const installer = opts['installWith']
-
-// Create a project directory with the project name.
-
 (async function() {
   const response = await prompts([
     {
@@ -142,6 +122,7 @@ function validateClassName(name) {
 
   // Update the project's package.json with the new project name
   projectPackageJson.name = shortName;
+  projectPackageJson.version = "1.0.0";
 
   fs.writeFileSync(
     path.join(projectDir, 'package.json'),
