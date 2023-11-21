@@ -128,6 +128,8 @@ function validateClassName(name) {
     path.join(projectDir, 'package.json'),
     JSON.stringify(projectPackageJson, null, 2)
   );
+
+  // make the manifest nice
   const gameManifest = require(path.join(projectDir, 'game.v1.json'));
   gameManifest.name = shortName
   gameManifest.friendlyName = projectName
@@ -136,17 +138,21 @@ function validateClassName(name) {
     JSON.stringify(gameManifest, null, 2)
   );
 
+  // make sure class name is nice
   const files = globSync(path.join(projectDir, "**/*.{tsx,ts}"))
   files.forEach((item) => {
     const contents = fs.readFileSync(item, 'utf8')
     fs.writeFileSync(item, contents.replace(new RegExp(`MyGame(Board|Player)`, 'g'), `${className}$1`));
   })
 
+  // copy gitignore over .gitignore
+  fs.copyFileSync(path.join(projectDir, "gitignore"), path.join(projectDir, ".gitignore"))
+
   if (installer !== "") {
     spawn(installer, ['install'], { stdio: 'inherit', cwd: projectDir });
   }
 
-  console.log('Success! Your new project is ready.');
+  console.log('🎉 Success! Your new project is ready.');
   console.log(`Created ${projectName} at ${projectDir}`);
 
 })()
