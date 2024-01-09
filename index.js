@@ -71,6 +71,7 @@ function validateClassName(name) {
       message: 'Which template would you like to use?',
       choices: [
         { title: 'Simple game', value: 'boardzilla-starter-game' },
+        { title: 'Empty game', value: 'boardzilla-empty-game' },
       ],
     },
     {
